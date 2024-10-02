@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace YaMapper.Mappers.Interfaces
+﻿namespace ObjectMapper.Mappers.Interfaces
 {
-    internal interface IRecursiveMap
+    public interface IRecursiveMap
     {
+        public TDest Map<TDest, TSource>(TSource source);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace YaMapper.Mappers.Interfaces
+﻿namespace ObjectMapper.Mappers.Interfaces
 {
     public interface ISimpleMap
     {
@@ -10,7 +10,9 @@
         /// <typeparam name="TSource">The type to map from</typeparam>
         /// <param name="source">An instance of the source type</param>
         /// <returns>An instance of the destination type with populated properties</returns>
-        public TDest Map<TDest, TSource>(TSource source);
+        public TDest Map<TDest, TSource>(TSource source)
+            where TDest : class
+            where TSource : class;
 
         /// <summary>
         /// Maps an IEnumerable to another IEnumerable using the property names and aliases of
@@ -20,6 +22,8 @@
         /// <typeparam name="TSource">The type to map from</typeparam>
         /// <param name="source">An instance of the source collection</param>
         /// <returns>An instance of IEnumerable<TDest> with populated elements</returns>
-        public IEnumerable<TDest> Map<TDest, TSource>(IEnumerable<TSource> source);
+        public IEnumerable<TDest> Map<TDest, TSource>(IEnumerable<TSource> source)
+            where TDest : class
+            where TSource : class;
     }
 }

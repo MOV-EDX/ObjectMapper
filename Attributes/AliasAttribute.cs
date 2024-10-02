@@ -1,4 +1,4 @@
-﻿namespace YaMapper.Attributes
+﻿namespace ObjectMapper.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public class AliasAttribute : Attribute

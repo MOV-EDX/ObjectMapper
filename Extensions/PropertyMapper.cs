@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using YaMapper.Attributes;
+using ObjectMapper.Attributes;
 
-namespace YaMapper.MappingEngines
+namespace ObjectMapper.Extensions
 {
     internal static class PropertyMapper
     {
@@ -37,6 +37,25 @@ namespace YaMapper.MappingEngines
         internal static object GetPropertyValue(this PropertyInfo property, object source)
         {
             return property.GetValue(source, null)!;
+        }
+
+        internal static object Map(this object source, Type destinationType)
+        {
+            var sourceType = source.GetType();
+            var destination = Activator.CreateInstance(destinationType);
+
+            foreach (var property in destinationType.GetProperties())
+            {
+                var sourceProperty = sourceType.FindProperty(property);
+
+                if (sourceProperty is not null && !sourceProperty.IsClass())
+                {
+                    var sourceValue = sourceProperty.GetValue(source);
+                    property.SetProperty(sourceValue!, destination!);
+                }
+            }
+
+            return destination!;
         }
     }
 }

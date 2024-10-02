@@ -1,11 +1,13 @@
-﻿using YaMapper.Mappers.Interfaces;
-using YaMapper.MappingEngines;
+﻿using ObjectMapper.Extensions;
+using ObjectMapper.Mappers.Interfaces;
 
-namespace YaMapper.Mappers
+namespace ObjectMapper.Mappers
 {
     public class SimpleMap : ISimpleMap
     {
         public TDest Map<TDest, TSource>(TSource source)
+            where TDest : class
+            where TSource : class
         {
             var destinationType = typeof(TDest);
             var sourceType = typeof(TSource);
@@ -27,6 +29,8 @@ namespace YaMapper.Mappers
         }
 
         public IEnumerable<TDest> Map<TDest, TSource>(IEnumerable<TSource> source)
+            where TDest : class
+            where TSource : class
         {
             var destination = new List<TDest>(source.Count());
 
