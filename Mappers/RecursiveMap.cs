@@ -30,13 +30,12 @@ namespace ObjectMapper.Mappers
 
                     if (property.IsClass())
                     {
-                        var populatedProperty = Map(source!, destinationType);
+                        var populatedProperty = Map(sourceValue!, property.PropertyType);
                         property.SetProperty(populatedProperty!, destination!);
                     }
                     else
                     {
-                        var populatedProperty = Map(source!, destinationType);
-                        property.SetProperty(populatedProperty!, destination!);
+                        property.SetProperty(sourceValue!, destination!);
                     }
                 }
             }
