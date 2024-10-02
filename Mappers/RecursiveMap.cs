@@ -35,7 +35,7 @@ namespace ObjectMapper.Mappers
                     }
                     else
                     {
-                        var populatedProperty = source.Map(destinationType);
+                        var populatedProperty = Map(source!, destinationType);
                         property.SetProperty(populatedProperty!, destination!);
                     }
                 }
