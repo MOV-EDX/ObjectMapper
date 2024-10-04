@@ -33,6 +33,48 @@ namespace ObjectMapper.Mappers
                     {
                         var populatedProperty = Map(sourceValue!, property.PropertyType);
                         property.SetProperty(populatedProperty!, destination!);
+
+                        continue;
+                    }
+
+                    if (property.IsDictionary())
+                    {
+                        var sourceDictionary = sourceValue as IDictionary;
+                        var targetDictionary = new Dictionary<object, object>();
+
+                        // Get the target key and value types to create the key value pair for
+                        var keyType = property.PropertyType.GenericTypeArguments[0];
+                        var valueType = property.PropertyType.GenericTypeArguments[1];
+
+                        foreach (DictionaryEntry pair in sourceDictionary!)
+                        {
+                            object key = null!;
+                            object value = null!;
+
+                            if (keyType.IsSystemType())
+                            {
+                                key = Convert.ChangeType(pair.Key, keyType);
+                            }
+                            else
+                            {
+                                key = Map(pair.Key!, keyType);
+                            }
+
+                            if (valueType.IsSystemType())
+                            {
+                                value = Convert.ChangeType(pair.Value, valueType)!;
+                            }
+                            else
+                            {
+                                value = Map(pair.Value!, valueType);
+                            }
+
+                            targetDictionary.Add(key, value);
+                        }
+
+                        property.SetEnumerableProperty(targetDictionary.ToTypedDictionary(keyType, valueType), destination!);
+
+                        continue;
                     }
 
                     if (property.IsEnumerable())
@@ -61,23 +103,28 @@ namespace ObjectMapper.Mappers
                                 targetEnumerable.Add(populatedElement);
                             }
 
-                            valueToSet = isArray ? targetEnumerable.ToTypedArray(elementType!) : targetEnumerable.ToTypedEnumerable(elementType!);
+                            valueToSet = CreateTypedEnumerableOrArray(targetEnumerable, elementType!, isArray);
                         }
                         else
                         {
-                            valueToSet = isArray ? sourceEnumerableValue!.ToTypedArray(elementType!) : sourceEnumerableValue!.ToTypedEnumerable(elementType!);
+                            valueToSet = CreateTypedEnumerableOrArray(sourceEnumerableValue!, elementType!, isArray);
                         }
 
                         property.SetEnumerableProperty(valueToSet!, destination!);
+
+                        continue;
                     }
-                    else
-                    {
-                        property.SetProperty(sourceValue!, destination!);
-                    }
+
+                    property.SetProperty(sourceValue!, destination!);
                 }
             }
 
             return destination!;
+        }
+
+        private object CreateTypedEnumerableOrArray(IEnumerable<object> source, Type elementType, bool isArray)
+        {
+            return isArray ? source!.ToTypedArray(elementType!) : source!.ToTypedEnumerable(elementType!);
         }
     }
 }
