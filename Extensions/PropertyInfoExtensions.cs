@@ -47,5 +47,25 @@ namespace ObjectMapper.Extensions
         {
             return property.PropertyType.FullName!.StartsWith("System") && !property.PropertyType.FullName.StartsWith("System.Collections");
         }
+
+        /// <summary>
+        /// Checks if the property is a DateTime type.
+        /// </summary>
+        /// <param name="property">The property to be checked.</param>
+        /// <returns>A boolean which determines if the property is a DateTime type or not.</returns>
+        public static bool IsDateTime(this PropertyInfo property)
+        {
+            return property.PropertyType.IsAssignableTo(typeof(DateTime)) || property.PropertyType.IsAssignableTo(typeof(DateTime?));
+        }
+
+        /// <summary>
+        /// Checks if the property is a DateTimeOffset type.
+        /// </summary>
+        /// <param name="property">The property to be checked.</param>
+        /// <returns>A boolean which determines if the property is a DateTimeOffset type or not.</returns>
+        public static bool IsDateTimeOffset(this PropertyInfo property)
+        {
+            return property.PropertyType.IsAssignableTo(typeof(DateTimeOffset)) || property.PropertyType.IsAssignableTo(typeof(DateTimeOffset?));
+        }
     }
 }

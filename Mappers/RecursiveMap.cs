@@ -54,6 +54,24 @@ namespace ObjectMapper.Mappers
                         continue;
                     }
 
+                    // Convert from DateTime to DateTimeOffset
+                    if (property.IsDateTimeOffset() && sourceProperty.IsDateTime())
+                    {
+                        var dateTime = (DateTime)sourceValue!;
+                        var dateTimeOffset = dateTime.ToDateTimeOffset();
+                        property.SetProperty(dateTimeOffset!, destination!);
+                        continue;
+                    }
+
+                    // Convert from DateTimeOffset to DateTime
+                    if (property.IsDateTime() && sourceProperty.IsDateTimeOffset())
+                    {
+                        var dateTimeOffset = (DateTimeOffset)sourceValue!;
+                        var dateTime = dateTimeOffset.ToDateTime();
+                        property.SetProperty(dateTime!, destination!);
+                        continue;
+                    }
+
                     if (property.IsClass())
                     {
                         var populatedProperty = Map(sourceValue!, property.PropertyType);
