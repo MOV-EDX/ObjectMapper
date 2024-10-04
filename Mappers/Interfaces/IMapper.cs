@@ -1,6 +1,6 @@
 ﻿namespace ObjectMapper.Mappers.Interfaces
 {
-    public interface ISimpleMap
+    public interface IMapper
     {
         /// <summary>
         /// Maps the source type to the destination type using an instance of source. This mapper

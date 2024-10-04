@@ -4,9 +4,11 @@ using ObjectMapper.Mappers.Interfaces;
 
 namespace ObjectMapper.Mappers
 {
-    public class RecursiveMap : IRecursiveMap
+    public sealed class RecursiveMap : IMapper
     {
         public TDest Map<TDest, TSource>(TSource source)
+            where TSource : class
+            where TDest : class
         {
             var destinationType = typeof(TDest);
             var sourceType = typeof(TSource);
@@ -14,6 +16,21 @@ namespace ObjectMapper.Mappers
             var destination = Map(source!, destinationType);
 
             return (TDest)destination;
+        }
+
+        public IEnumerable<TDest> Map<TDest, TSource>(IEnumerable<TSource> source)
+            where TSource : class
+            where TDest : class
+        {
+            var destination = new List<TDest>(source.Count());
+
+            foreach (var sourceItem in source)
+            {
+                var result = Map<TDest, TSource>(sourceItem);
+                destination.Add(result);
+            }
+
+            return destination;
         }
 
         private object Map(object source, Type destinationType)
