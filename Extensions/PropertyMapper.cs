@@ -20,6 +20,20 @@ namespace ObjectMapper.Extensions
             throw new InvalidCastException($"Unable to assign {value} to {property.Name} for {destinationName}");
         }
 
+        internal static void SetEnumerableProperty(this PropertyInfo property, object value, object destination)
+        {
+            var destinationName = destination.GetType().Name;
+            var valueType = value.GetType();
+
+            if (valueType.IsAssignableTo(property.PropertyType))
+            {
+                property.SetValue(destination, value);
+                return;
+            }
+
+            throw new InvalidCastException($"Unable to assign {value} to {property.Name} for {destinationName}");
+        }
+
         internal static PropertyInfo FindProperty(this Type source, PropertyInfo destination)
         {
             var destinationAlias = destination.GetCustomAttribute<AliasAttribute>();
